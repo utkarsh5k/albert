@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.location.Location;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Environment;
@@ -151,8 +152,8 @@ public class OptionActivity extends AppCompatActivity {
             case REQUEST_TAKE_PHOTO:
                 if(resultCode == RESULT_OK) {
                     Intent dIntent = new Intent(this, DescribeActivity.class);
-                    Uri uri = data.getData();
-                    dIntent.putExtra("imageUri",uri.toString());
+                    dIntent.putExtra("imageUri",mUriPhotoTaken.toString());
+                    Log.d("Hello After", mUriPhotoTaken.toString());
                     startActivity(dIntent);
                 }
                 break;
@@ -163,6 +164,10 @@ public class OptionActivity extends AppCompatActivity {
 
     public void takePhoto(View view){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+        mUriPhotoTaken = Uri.fromFile(f);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,  mUriPhotoTaken);
+        Log.d("Hello Before", mUriPhotoTaken.toString());
         if(intent.resolveActivity(getPackageManager()) != null){
             startActivityForResult(intent, REQUEST_TAKE_PHOTO);
             }

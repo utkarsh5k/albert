@@ -52,6 +52,7 @@ public class DescribeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Uri uri = Uri.parse(intent.getStringExtra("imageUri"));
+        Log.d("Hello", uri.toString());
         try {
             InputStream image_stream = getContentResolver().openInputStream(uri);
         } catch (FileNotFoundException e) {
