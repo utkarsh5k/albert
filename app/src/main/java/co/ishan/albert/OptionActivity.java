@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.media.AudioManager;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,12 +22,17 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class OptionActivity extends AppCompatActivity {
 
+    private static final int REQUEST_TAKE_PHOTO = 0;
+    private static final int REQUEST_SELECT_IMAGE_IN_ALBUM = 1;
+    private Uri mUriPhotoTaken;
     private String options = "Press on the left side for speech assisstant or on the right for camera";
     private TextToSpeech t;
     private ImageButton microPhone,camera;
@@ -32,7 +41,6 @@ public class OptionActivity extends AppCompatActivity {
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private AudioManager manager;
     public final static String EXTRA_MESSAGE = "intent message";
-    public TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +64,6 @@ public class OptionActivity extends AppCompatActivity {
 
         microPhone = (ImageButton) findViewById(R.id.microphoneButton);
         camera = (ImageButton) findViewById(R.id.cameraButton);
-        tv = (TextView) findViewById(R.id.tv);
 
         microPhone.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -66,8 +73,7 @@ public class OptionActivity extends AppCompatActivity {
 
         camera.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(OptionActivity.this, AssisstantActivity.class);
-                startActivity(intent);
+                takePhoto(v);
             }
         });
 
@@ -76,15 +82,26 @@ public class OptionActivity extends AppCompatActivity {
 
     }
 
+    protected void onSaveInstanceStata(Bundle state){
+        super.onSaveInstanceState(state);
+        state.putParcelable("ImageUri", mUriPhotoTaken);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mUriPhotoTaken = savedInstanceState.getParcelable("ImageUri");
+    }
+
     private void promptSpeechInput() {
-        Log.d("status10","working fine");
+        //Log.d("status10","working fine");
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        Log.d("status11","working fine");
+        //Log.d("status11","working fine");
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"Say Something");
-        Log.d("status12","working fine");
+        //Log.d("status12","working fine");
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {
@@ -95,19 +112,18 @@ public class OptionActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("status13","working fine");
+        //Log.d("status13","working fine");
         switch (requestCode){
             case REQ_CODE_SPEECH_INPUT: {
-                Log.d("status14","working fine");
+                //Log.d("status14","working fine");
                 if(resultCode == RESULT_OK && null != data){
-                    Log.d("status15","working fine");
+                    //Log.d("status15","working fine");
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     command = result.get(0).toString();
-                    Log.d("status16",command);
-                    tv.setText(command);
+                    //Log.d("status16",command);
                     arr = command.split(" ",2);
                     firstWord = arr[0];
-                    Log.d("First Word", firstWord);
+                    //Log.d("First Word", firstWord);
                     switch(firstWord)
                     {
                         case "silent":
@@ -123,7 +139,7 @@ public class OptionActivity extends AppCompatActivity {
                             break;
                         case "open":
                             callString = arr[1];
-                            Log.d("Second Word", callString);
+                            //Log.d("Second Word", callString);
                             openApp(callString);
                             break;
                         default:
@@ -132,8 +148,27 @@ public class OptionActivity extends AppCompatActivity {
 
                 }
             }
+            case REQUEST_TAKE_PHOTO:
+                if(resultCode == RESULT_OK) {
+                    Intent dIntent = new Intent(this, DescribeActivity.class);
+                    Uri uri = data.getData();
+                    dIntent.putExtra("imageUri",uri.toString());
+                    startActivity(dIntent);
+                }
+                break;
+            default:
+                break;
         }
     }
+
+    public void takePhoto(View view){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(intent.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+            }
+        }
+
+
 
     public void callPhone(String callNumber){
         Intent callIntent = new Intent(this, CallActivity.class);
@@ -192,4 +227,7 @@ public class OptionActivity extends AppCompatActivity {
     }
 
 
+    public void setInfo(String info) {
+        Toast.makeText(this,info,Toast.LENGTH_LONG).show();
+    }
 }

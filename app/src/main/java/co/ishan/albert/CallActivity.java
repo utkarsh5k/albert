@@ -14,10 +14,10 @@ public class CallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call);
-        Log.d("number1","working");
+        //Log.d("number1","working");
         Intent intent = getIntent();
         number = intent.getStringExtra(OptionActivity.EXTRA_MESSAGE);
-        Log.d("number",number);
+        //Log.d("number",number);
         callNumber(number);
     }
 

@@ -3,8 +3,10 @@
     package="co.ishan.albert">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -34,7 +36,9 @@
         <activity android:name=".OptionActivity" />
         <activity android:name=".CameraActivity" />
         <activity android:name=".AssisstantActivity" />
-        <activity android:name=".CallActivity"></activity>
+        <activity android:name=".CallActivity" />
+        <activity android:name=".ImageHelper" />
+        <activity android:name=".DescribeActivity"></activity>
     </application>
 
 </manifest>

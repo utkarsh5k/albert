@@ -17,7 +17,8 @@
         android:id="@+id/microphoneButton"
         android:src="@drawable/ic_mic"
         android:background="@null"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -25,23 +26,13 @@
         android:id="@+id/cameraButton"
         android:src="@drawable/ic_camera"
         android:background="@null"
-        android:onClick="activityDescribe"
+        android:onClick="takePhoto"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_toRightOf="@+id/microphoneButton"
         android:layout_toEndOf="@+id/microphoneButton"
         android:layout_alignParentBottom="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/button"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/tv"
-        android:textColor="#000"
-        android:text="Speak Something"/>
 
 
 </RelativeLayout>

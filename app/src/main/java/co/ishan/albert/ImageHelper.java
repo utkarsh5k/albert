@@ -3,11 +3,11 @@ package co.ishan.albert;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class AssisstantActivity extends AppCompatActivity {
+public class ImageHelper extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_assisstant);
+        setContentView(R.layout.activity_image_helper);
     }
 }
